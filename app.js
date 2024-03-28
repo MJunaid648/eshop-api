@@ -7,6 +7,8 @@ const productRoutes = require("./routers/products");
 const categoryRoutes = require("./routers/categories");
 const userRoutes = require("./routers/users");
 const orderRoutes = require("./routers/orders");
+const authJwt = require("./helpers/jwt");
+const errorHandler = require("./helpers/errorHandler");
 require("dotenv").config();
 
 const app = express();
@@ -19,6 +21,8 @@ app.options("*", cors());
 // middlewares
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
+app.use(authJwt());
+app.use(errorHandler);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -29,8 +33,8 @@ app.use((err, req, res, next) => {
 // Routes
 app.use(`${api}/products`, productRoutes);
 app.use(`${api}/categories`, categoryRoutes);
+app.use(`${api}/users`, userRoutes);
 // app.use(`${api}/orders`, orderRoutes);
-// app.use(`${api}/users`, userRoutes);
 
 connectDB();
 app.listen(PORT, () => console.log("server is running on port", PORT));
